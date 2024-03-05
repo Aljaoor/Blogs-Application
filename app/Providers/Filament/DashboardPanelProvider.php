@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -20,9 +21,11 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
 use Jeffgreco13\FilamentBreezy\Pages\TwoFactorPage;
 use Althinect\FilamentSpatieRolesPermissions\FilamentSpatieRolesPermissionsPlugin;
+use Spatie\Permission\Middleware\RoleMiddleware;
 
 class DashboardPanelProvider extends PanelProvider
 {
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -30,14 +33,14 @@ class DashboardPanelProvider extends PanelProvider
             ->id('dashboard')
             ->path('dashboard')
             ->login()
+            ->favicon(asset('logo2.png'))
+            ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
             ->plugin(
                 BreezyCore::make()
                     ->myProfile()
                     ->enableTwoFactorAuthentication(
                         action: TwoFactorPage::class
-                    ),
-                FilamentSpatieRolesPermissionsPlugin::make()
-
+                    )
             )
             ->colors([
                 'primary' => Color::Amber,
@@ -62,7 +65,9 @@ class DashboardPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+
             ])
+            ->viteTheme('resources/css/filament/dashboard/theme.css')
             ->authMiddleware([
                 Authenticate::class,
             ]);
