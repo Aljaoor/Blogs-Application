@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->syncRoles(Role::where('name','Web User')->where('guard_name','web')->first());
+        $user->syncRoles(Role::where('name','Web User')->where('guard_name','web')->first(),Role::where('name','Mobile User')->where('guard_name','api')->first());
 
         event(new Registered($user));
 

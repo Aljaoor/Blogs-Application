@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\Action;
 
 class UserResource extends Resource
 {
@@ -35,6 +36,7 @@ class UserResource extends Resource
                 Forms\Components\TextInput::make('email')
                     ->email()
                     ->required()
+                    ->unique()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
@@ -65,6 +67,8 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                Action::make('test-edit')
+                    ->url(fn (User $record): string => url('/dashboard/users/test-edit', $record))
 
             ])
             ->bulkActions([
@@ -87,6 +91,8 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+//            'test-edit' => Pages\EditTowUser::route('/test-edit/{record}'),
+
         ];
     }
 }
