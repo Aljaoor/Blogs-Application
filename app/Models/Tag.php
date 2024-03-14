@@ -5,36 +5,36 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property integer $id
- * @property integer $user_id
- * @property string $name
- * @property string $created_at
- * @property string $updated_at
- * @property PostTag[] $postTags
- * @property User $user
- */
 class Tag extends Model
 {
-    use HasFactory;
-    /**
-     * @var array
-     */
-    protected $fillable = ['user_id', 'name', 'created_at', 'updated_at'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function posts()
+    use HasFactory;
+
+    public $table = 'tags';
+
+    public $fillable = [
+        'user_id',
+        'name'
+    ];
+
+    protected $casts = [
+        'name' => 'string'
+    ];
+
+    public static array $rules = [
+        'user_id' => 'required',
+        'name' => 'required|string|max:255',
+        'created_at' => 'nullable',
+        'updated_at' => 'nullable'
+    ];
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsToMany(Post::class,'post_tags');
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
+    public function posts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsToMany(Post::class, 'post_tags');
     }
 }

@@ -5,26 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property integer $id
- * @property string $name
- * @property string $created_at
- * @property string $updated_at
- * @property CategoryPost[] $categoryPosts
- */
 class Category extends Model
 {
     use HasFactory;
-    /**
-     * @var array
-     */
-    protected $fillable = ['name', 'created_at', 'updated_at'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function posts()
+    public $table = 'categories';
+
+    public $fillable = [
+        'name'
+    ];
+
+    protected $casts = [
+        'name' => 'string'
+    ];
+
+    public static array $rules = [
+        'name' => 'required|string|max:255',
+        'created_at' => 'nullable',
+        'updated_at' => 'nullable'
+    ];
+
+    public function posts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Post::class,'category_posts');
+        return $this->belongsToMany(Post::class, 'category_posts');
     }
+
 }

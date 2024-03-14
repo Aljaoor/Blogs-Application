@@ -15,7 +15,10 @@
         "jeffgreco13/filament-breezy": "^2.3",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/tinker": "^2.8"
+        "laravel/tinker": "^2.8",
+        "infyomlabs/laravel-generator": "^6.0",
+        "infyomlabs/adminlte-templates": "^6.0",
+        "doctrine/dbal": "3.7.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.10",

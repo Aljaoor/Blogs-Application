@@ -5,50 +5,55 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property integer $id
- * @property integer $author_id
- * @property string $title
- * @property string $slug
- * @property string $image
- * @property string $description
- * @property string $published_at
- * @property boolean $active
- * @property string $created_at
- * @property string $updated_at
- * @property PostTag[] $postTags
- * @property CategoryPost[] $categoryPosts
- * @property User $user
- */
 class Post extends Model
 {
     use HasFactory;
-    /**
-     * @var array
-     */
-    protected $fillable = ['author_id', 'title', 'slug', 'image', 'description', 'published_at', 'active', 'created_at', 'updated_at'];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function tags()
+    public $table = 'posts';
+
+    public $fillable = [
+        'author_id',
+        'title',
+        'slug',
+        'image',
+        'description',
+        'published_at',
+        'active'
+    ];
+
+    protected $casts = [
+        'title' => 'string',
+        'slug' => 'string',
+        'image' => 'string',
+        'description' => 'string',
+        'published_at' => 'string',
+        'active' => 'boolean'
+    ];
+
+    public static array $rules = [
+        'author_id' => 'required',
+        'title' => 'required|string|max:255',
+        'slug' => 'required|string|max:255',
+        'image' => 'required|string|max:255',
+        'description' => 'required|string',
+        'published_at' => 'required|string',
+        'active' => 'required|boolean',
+        'created_at' => 'nullable',
+        'updated_at' => 'nullable'
+    ];
+
+    public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsToMany('App\Models\Tag','post_tags');
+        return $this->belongsTo(\App\Models\User::class, 'author_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function categories()
+    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Category::class,'category_posts');
+        return $this->belongsToMany(Category::class, 'category_posts');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
+    public function tags(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsTo('App\Models\User', 'author_id');
+        return $this->belongsToMany(Tag::class, 'post_tags');
     }
 }
