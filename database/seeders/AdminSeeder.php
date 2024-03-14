@@ -32,5 +32,9 @@ class AdminSeeder extends Seeder
         $admin->assignRole(Role::where('name','Author')->where('guard_name', 'web')->first());
         $admin->assignRole(Role::where('name','Author')->where('guard_name', 'api')->first());
 
+        \App\Models\User::factory(5)
+            ->hasAttached(Role::where('name','Author')->first())
+            ->create();
+
     }
 }
