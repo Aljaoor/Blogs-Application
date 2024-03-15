@@ -28,7 +28,13 @@ class Tag extends Model
         'updated_at' => 'nullable'
     ];
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function getUpdatedAtAttribute($value) :string
+    {
+        return \Carbon\Carbon::parse($value)->diffForHumans(); // Example date format
+    }
+
+
+    public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
