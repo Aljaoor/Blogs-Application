@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -23,6 +24,12 @@ class PostResource extends Resource
     protected static ?string $navigationLabel = "Posts Management";
 
     protected static ?int $navigationSort = 4;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::whereDate('created_at' ,'>',Carbon::now()->subDay(2))->count() > 0 ? 'new' : '';
+    }
+    protected static ?string $navigationBadgeTooltip = 'The number of users';
 
     public static function form(Form $form): Form
     {
@@ -86,7 +93,8 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('categories.name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('tags.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->limit(20),
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('published_at')
                     ->dateTime('Y-m-d')
@@ -124,7 +132,8 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\CategoriesRelationManager::class,
+            RelationManagers\TagsRelationManager::class
         ];
     }
 

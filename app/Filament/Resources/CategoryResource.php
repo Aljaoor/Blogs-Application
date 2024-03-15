@@ -65,6 +65,8 @@ class CategoryResource extends Resource
             ]);
     }
 
+
+
     public static function getPages(): array
     {
         return [

@@ -21,6 +21,11 @@ class UserResource extends Resource
         return auth()->user()->hasPermissionTo('User Management');
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
     protected static ?string $model = User::class;
 
     protected static ?int $navigationSort = 1;

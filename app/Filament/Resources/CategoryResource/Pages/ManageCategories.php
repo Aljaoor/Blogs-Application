@@ -11,7 +11,6 @@ class ManageCategories extends ManageRecords
     protected static string $resource = CategoryResource::class;
 
 
-    #ToDo check if posts images deleted when delete any category
     protected function getHeaderActions(): array
     {
         return [
