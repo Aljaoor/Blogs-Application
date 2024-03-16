@@ -175,6 +175,7 @@
       <path value="$PROJECT_DIR$/vendor/infyomlabs/laravel-generator-helpers" />
       <path value="$PROJECT_DIR$/vendor/infyomlabs/laravel-generator" />
       <path value="$PROJECT_DIR$/vendor/infyomlabs/adminlte-templates" />
+      <path value="$PROJECT_DIR$/vendor/flowframe/laravel-trend" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
