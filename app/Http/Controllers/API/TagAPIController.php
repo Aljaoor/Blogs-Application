@@ -20,6 +20,9 @@ class TagAPIController extends AppBaseController
     public function __construct(TagRepository $tagRepo)
     {
         $this->tagRepository = $tagRepo;
+        $this->middleware(['auth:api','role:Author|Admin'])->only(['update', 'destroy','store']);
+
+
     }
 
     /**
@@ -28,11 +31,7 @@ class TagAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $tags = $this->tagRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $tags = $this->tagRepository->paginate(10);
 
         return $this->sendResponse($tags->toArray(), 'Tags retrieved successfully');
     }
@@ -72,6 +71,7 @@ class TagAPIController extends AppBaseController
      */
     public function update($id, UpdateTagAPIRequest $request): JsonResponse
     {
+        
         $input = $request->all();
 
         /** @var Tag $tag */

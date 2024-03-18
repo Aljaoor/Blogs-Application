@@ -6,6 +6,7 @@ use App\Http\Requests\API\CreatePostAPIRequest;
 use App\Http\Requests\API\UpdatePostAPIRequest;
 use App\Models\Post;
 use App\Repositories\PostRepository;
+use App\Traits\ImageTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
@@ -17,9 +18,13 @@ class PostAPIController extends AppBaseController
 {
     private PostRepository $postRepository;
 
+    use ImageTrait;
+
     public function __construct(PostRepository $postRepo)
     {
         $this->postRepository = $postRepo;
+        $this->middleware(['auth:api','role:Author|Admin'])->only(['update', 'destroy','store']);
+
     }
 
     /**
@@ -28,11 +33,8 @@ class PostAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $posts = $this->postRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $posts = $this->postRepository->paginateWithRelation(
+            ['categories','tags'],10);
 
         return $this->sendResponse($posts->toArray(), 'Posts retrieved successfully');
     }
@@ -44,6 +46,7 @@ class PostAPIController extends AppBaseController
     public function store(CreatePostAPIRequest $request): JsonResponse
     {
         $input = $request->all();
+
 
         $post = $this->postRepository->create($input);
 
@@ -101,6 +104,9 @@ class PostAPIController extends AppBaseController
             return $this->sendError('Post not found');
         }
 
+        if ($post->image) {
+            \Storage::disk('public')->delete($post->image);
+        }
         $post->delete();
 
         return $this->sendSuccess('Post deleted successfully');

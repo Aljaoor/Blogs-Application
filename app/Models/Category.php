@@ -10,6 +10,7 @@ class Category extends Model
     use HasFactory;
 
     public $table = 'categories';
+    protected $hidden = ['pivot'];
 
     public $fillable = [
         'name'
@@ -20,7 +21,7 @@ class Category extends Model
     ];
 
     public static array $rules = [
-        'name' => 'required|string|max:255',
+        'name' => 'nullable|string|max:255',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'
     ];

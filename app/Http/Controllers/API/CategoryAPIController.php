@@ -20,6 +20,8 @@ class CategoryAPIController extends AppBaseController
     public function __construct(CategoryRepository $categoryRepo)
     {
         $this->categoryRepository = $categoryRepo;
+        $this->middleware(['auth:api','role:Author|Admin'])->only(['update', 'destroy','store']);
+
     }
 
     /**
@@ -73,7 +75,6 @@ class CategoryAPIController extends AppBaseController
     public function update($id, UpdateCategoryAPIRequest $request): JsonResponse
     {
         $input = $request->all();
-
         /** @var Category $category */
         $category = $this->categoryRepository->find($id);
 

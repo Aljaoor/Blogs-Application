@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use Illuminate\Container\Container as Application;
+use App\Traits\ImageTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseRepository
 {
+    use ImageTrait;
     /**
      * @var Model
      */
@@ -57,6 +58,16 @@ abstract class BaseRepository
     public function paginate(int $perPage, array $columns = ['*']): LengthAwarePaginator
     {
         $query = $this->allQuery();
+        return $query->paginate($perPage, $columns);
+    }
+
+    /**
+     * Paginate records for scaffold with Relations.
+     */
+    public function paginateWithRelation(array $relation, int $perPage, array $columns = ['*']): LengthAwarePaginator
+    {
+        $query = $this->allQueryWithRelation($relation);
+
 
         return $query->paginate($perPage, $columns);
     }
@@ -88,6 +99,33 @@ abstract class BaseRepository
     }
 
     /**
+     * Build a query for retrieving all records. with Relation
+     */
+    public function allQueryWithRelation(array $relations, array $search = [], int $skip = null, int $limit = null): Builder
+    {
+        $query = $this->model->newQuery()->with($relations);
+
+        if (count($search)) {
+            foreach ($search as $key => $value) {
+                if (in_array($key, $this->getFieldsSearchable())) {
+                    $query->where($key, $value);
+                }
+            }
+        }
+
+        if (!is_null($skip)) {
+            $query->skip($skip);
+        }
+
+        if (!is_null($limit)) {
+            $query->limit($limit);
+        }
+
+        return $query;
+    }
+
+
+    /**
      * Retrieve all records with given filter criteria
      */
     public function all(array $search = [], int $skip = null, int $limit = null, array $columns = ['*']): Collection
@@ -98,13 +136,33 @@ abstract class BaseRepository
     }
 
     /**
+     * Retrieve all records with Relation
+     */
+
+    public function allWithRelation(array $relation, array $search = [], int $skip = null, int $limit = null, array $columns = ['*']): Collection
+    {
+        $query = $this->allQueryWithRelation($relation, $search, $skip, $limit);
+
+        return $query->get($columns);
+    }
+
+    /**
      * Create model record
      */
     public function create(array $input): Model
     {
+        if (isset($input['image']))
+            $input['image'] = $this->uploadImageToStorageDisk($input['image']);
         $model = $this->model->newInstance($input);
-
         $model->save();
+
+        if (isset($input['categories'])) {
+            $model->categories()->attach($input['categories']);
+        }
+
+        if (isset($input['tags'])) {
+            $model->tags()->attach($input['tags']);
+        }
 
         return $model;
     }

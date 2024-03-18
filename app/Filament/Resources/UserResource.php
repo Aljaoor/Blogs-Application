@@ -68,6 +68,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('Roles.name')
                     ->searchable(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

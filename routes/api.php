@@ -28,3 +28,16 @@ Route::resource('tags', App\Http\Controllers\API\TagAPIController::class)
 
 Route::resource('posts', App\Http\Controllers\API\PostAPIController::class)
     ->except(['create', 'edit']);
+
+Route::controller(\App\Http\Controllers\API\UserAPIController::class)
+    ->prefix('/user')
+    ->group(function () {
+        Route::group(['middleware' => ['auth:api']], static function () {
+            Route::get('/profile', 'profile');
+            Route::post('/update', 'update');
+            Route::post('/logout', 'logout');
+        });
+        Route::post('/login', 'login');
+        Route::post('/register', 'register');
+
+    });

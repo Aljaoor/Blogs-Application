@@ -31,15 +31,20 @@ class Post extends Model
     ];
 
     public static array $rules = [
-        'author_id' => 'required',
+        'author_id' => 'required|exists:users,id|',
         'title' => 'required|string|max:255',
         'slug' => 'required|string|max:255',
-        'image' => 'required|string|max:255',
+        'image' => 'required|image|max:1024',
         'description' => 'required|string',
-        'published_at' => 'required|string',
+        'published_at' => 'required|date',
         'active' => 'required|boolean',
         'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        'updated_at' => 'nullable',
+        'categories' => 'required|array',
+        'categories.*' => 'integer|exists:categories,id',
+        'tags' => 'array',
+        'tags.*' => 'integer|exists:tags,id'
+
     ];
 
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo

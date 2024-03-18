@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Spatie\Permission\Models\Role;
 
 class PostFactory extends Factory
 {
@@ -22,7 +23,7 @@ class PostFactory extends Factory
             'created_at' => $this->faker->date('Y-m-d H:i:s'),
             'updated_at' => $this->faker->date('Y-m-d H:i:s'),
 
-            'author_id' => User::factory(),
+            'author_id' => User::factory()->hasAttached([Role::whereName('Author')->where('guard_name', 'web')->first(),Role::where('name','Author')->where('guard_name', 'api')->first()]),
         ];
     }
 

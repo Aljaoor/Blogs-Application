@@ -24,6 +24,7 @@ class CreatePostAPIRequest extends APIRequest
      */
     public function rules()
     {
-        return Post::$rules;
+        $rules = Post::$rules;
+        return $rules;
     }
 }

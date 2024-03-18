@@ -11,6 +11,7 @@ class Tag extends Model
     use HasFactory;
 
     public $table = 'tags';
+    protected $hidden = ['pivot'];
 
     public $fillable = [
         'user_id',
