@@ -25,3 +25,9 @@ This is a Laravel-based blogs application developed using Filament, HTML, Tailwi
 - Authorization Control: Different user roles with specific permissions.
 - Filtering: Filter blog posts by categories and tags.
 - Web and Mobile Support: Responsive design for both web and mobile platforms.
+
+- 
+![filament](https://github.com/Aljaoor/Blogs-Application/assets/102248069/2c4b97ce-7b3e-4832-b9fa-76664a894a07)
+
+
+![website](https://github.com/Aljaoor/Blogs-Application/assets/102248069/55f6dc38-5010-425e-bb82-04ea0bb6016b)
