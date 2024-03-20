@@ -16,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/', [\App\Http\Controllers\PostController::class, 'index'])->name('home');
+Route::get('/post/{post:slug}', [\App\Http\Controllers\PostController::class, 'show'])->name('view');
+Route::get('/category/{category:name}', [\App\Http\Controllers\PostController::class, 'byCategory'])->name('by-category');
+Route::get('/tag/{tag:name}', [\App\Http\Controllers\PostController::class, 'byTag'])->name('by-tag');
+Route::get('/about-us', [\App\Http\Controllers\HomeController::class, 'about'])->name('about');
 
 
 Route::middleware('auth')->group(function () {

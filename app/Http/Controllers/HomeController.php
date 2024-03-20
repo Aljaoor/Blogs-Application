@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Post;
-use App\Models\Tag;
-use App\Models\User;
+use App\Models\TextWidget;
 
 class HomeController extends Controller
 {
-    public function home()
+    public function about()
     {
-        return view('dashboard');
+        $widget = TextWidget::query()
+            ->where('key', '=', 'about-us')
+            ->where('active', '=', 1)
+            ->first();
+
+        return view('about-us', compact('widget'));
     }
 }

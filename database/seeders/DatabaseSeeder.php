@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TagSeeder::class);
         $this->call(PostSeeder::class);
         $this->call(PassportSeeder::class);
+        $this->call(TextWidgetsSeeder::class);
+
 
 
 

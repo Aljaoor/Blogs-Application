@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,7 +19,9 @@ class Post extends Model
         'image',
         'description',
         'published_at',
-        'active'
+        'active',
+        'meta_title',
+        'meta_description',
     ];
 
     protected $casts = [
@@ -26,7 +29,7 @@ class Post extends Model
         'slug' => 'string',
         'image' => 'string',
         'description' => 'string',
-        'published_at' => 'string',
+        'published_at' => 'datetime',
         'active' => 'boolean'
     ];
 
@@ -47,6 +50,11 @@ class Post extends Model
 
     ];
 
+    public function shortBody():string
+    {
+        return \Str::words(strip_tags($this->description),30);
+    }
+
     public function author(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(\App\Models\User::class, 'author_id');
@@ -61,4 +69,18 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class, 'post_tags');
     }
+
+    public function scopeActive(Builder $query,$bool): Builder
+    {
+        return $query->where('active','=',$bool);
+    }
+
+    public function getImageAttribute(): string
+    {
+        if (str_starts_with($this->attributes['image'], 'http')) {
+            return $this->attributes['image'];
+        }
+        return asset('storage/' . $this->attributes['image']);
+    }
+
 }

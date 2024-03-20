@@ -74,6 +74,10 @@ class PostResource extends Resource
                         Forms\Components\Textarea::make('description')
                             ->required()
                             ->columnSpanFull(),
+                        Forms\Components\TextInput::make('meta_title')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('meta_description')
+                            ->maxLength(255),
 
                         Forms\Components\Toggle::make('active')
                             ->required(),
